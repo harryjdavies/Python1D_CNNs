@@ -61,11 +61,8 @@ def load_dataset(prefix=''):
 # load data set and split into training and testing inputs (X) and outputs (y)
 trainX, trainy, testX, testy = load_dataset('D:/PhD/MachineLearning/UCIHARDataset/')
 
-# parameters of the data set
-n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
-
 # fit and evaluate a model
-def evaluate_model(trainX, trainy, testX, testy):
+def evaluate_model1(trainX, trainy, testX, testy):
 	verbose, epochs, batch_size = 0, 10, 32
 	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
 	model = Sequential()
@@ -83,6 +80,77 @@ def evaluate_model(trainX, trainy, testX, testy):
 	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
 	return accuracy
 
+def evaluate_model2(trainX, trainy, testX, testy):
+	verbose, epochs, batch_size = 0, 10, 32
+	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
+	model = Sequential()
+	model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
+	model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
+	model.add(Dropout(0.5))
+	model.add(MaxPooling1D(pool_size=10))
+	model.add(Flatten())
+	model.add(Dense(100, activation='relu'))
+	model.add(Dense(n_outputs, activation='softmax'))
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	# fit network
+	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
+	# evaluate model
+	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
+	return accuracy
+
+def evaluate_model3(trainX, trainy, testX, testy):
+	verbose, epochs, batch_size = 0, 10, 32
+	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
+	model = Sequential()
+	model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
+	model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
+	model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
+	model.add(Dropout(0.5))
+	model.add(MaxPooling1D(pool_size=2))
+	model.add(Flatten())
+	model.add(Dense(100, activation='relu'))
+	model.add(Dense(n_outputs, activation='softmax'))
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	# fit network
+	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
+	# evaluate model
+	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
+	return accuracy
+
+def evaluate_model4(trainX, trainy, testX, testy):
+	verbose, epochs, batch_size = 0, 10, 32
+	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
+	model = Sequential()
+	model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
+	model.add(Dropout(0.5))
+	model.add(MaxPooling1D(pool_size=2))
+	model.add(Flatten())
+	model.add(Dense(100, activation='relu'))
+	model.add(Dense(n_outputs, activation='softmax'))
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	# fit network
+	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
+	# evaluate model
+	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
+	return accuracy
+
+def evaluate_model5(trainX, trainy, testX, testy):
+	verbose, epochs, batch_size = 0, 10, 32
+	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
+	model = Sequential()
+	model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
+	model.add(Dropout(0.5))
+	model.add(MaxPooling1D(pool_size=10))
+	model.add(Flatten())
+	model.add(Dense(100, activation='relu'))
+	model.add(Dense(n_outputs, activation='softmax'))
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	# fit network
+	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
+	# evaluate model
+	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
+	return accuracy
+
 # summarize scores
 def summarize_results(scores):
 	print(scores)
@@ -90,9 +158,9 @@ def summarize_results(scores):
 	print('Accuracy: %.3f%% (+/-%.3f)' % (m, s))
 
 scores = list()
-repeats = 10
+repeats = 3
 for r in range(repeats):
-	score = evaluate_model(trainX,trainy,testX,testy)*100
+	score = evaluate_model5(trainX,trainy,testX,testy)*100
 	print('>#%d: %.3f' % (r+1, score))
 	scores.append(score)
 
